@@ -1,0 +1,8 @@
+pub mod file_loader;
+pub mod file_saver;
+pub mod persistence;
+
+#[cfg(not(target_arch = "wasm32"))]
+pub fn spawn(future: impl std::future::Future<Output = ()> + Send + 'static) {
+    std::thread::spawn(|| pollster::block_on(future));
+}

@@ -1,0 +1,34 @@
+[package]
+name = "lemon-noise-app"
+edition.workspace = true
+license.workspace = true
+version.workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+targets = ["wasm32-unknown-unknown"]
+
+[dependencies]
+lemon-noise = { workspace = true, features = ["audio", "persistence"] }
+eframe = { version = "0.34.2", default-features = false, features = ["persistence"] }
+egui = "0.34.2"
+egui-notify = "0.22"
+egui-phosphor = { version = "0.12.0", features = ["regular"] }
+egui_plot = "0.35.0"
+log = "0.4.29"
+rfd = "0.17.2"
+serde = { workspace = true }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+eframe = { version = "0.34.2", default-features = false, features = ["persistence", "wayland", "wgpu", "x11"] }
+directories = "6"
+env_logger = "0.11.8"
+pollster = "0.4.0"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+eframe = { version = "0.34.2", default-features = false, features = ["glow", "persistence"] }
+base64 = "0.22"
+js-sys = "0.3.98"
+wasm-bindgen = "0.2.100"
+wasm-bindgen-futures = "0.4.71"
+web-sys = { version = "0.3.98", features = ["Window", "Document", "Element", "Node", "HtmlElement", "HtmlCanvasElement", "HtmlAnchorElement", "Blob", "Url", "Storage"] }

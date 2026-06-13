@@ -1,0 +1,37 @@
+services:
+  server:
+    container_name: lemon-noise
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "61324:61324"
+
+  server-dev:
+    container_name: lemon-noise
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:61324:61324"
+    volumes:
+      - ..:/lemon-noise
+      - lemon_noise_cargo_target:/lemon-noise/target
+      - lemon_noise_cargo_registry:/usr/local/cargo/registry
+    init: true
+    command: >-
+      cargo watch -w core -w server -w app --delay 3
+      -s "cd /lemon-noise/app && trunk build --release --filehash false
+      && cd /lemon-noise && cargo run --bin lemon-noise-server"
+    environment:
+      - STATIC_DIR=/lemon-noise/app/dist
+    profiles: [ dev ]
+
+volumes:
+  lemon_noise_cargo_target:
+  lemon_noise_cargo_registry:
